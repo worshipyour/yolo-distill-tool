@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yolo-distill-tool"
+version = "0.2.0"
+description = "Reproducible YOLOv5 detector distillation with a small plugin interface"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "GPL-3.0"}
+dependencies = ["PyYAML>=6,<7", "psutil>=5.9,<8"]
+
+[project.optional-dependencies]
+runtime = ["numpy>=1.23,<2", "Pillow>=10,<13", "opencv-python>=4.8,<4.12"]
+test = ["pytest>=8,<9"]
+export = ["onnx>=1.15,<1.18", "onnxruntime>=1.17,<1.21"]
+
+[project.scripts]
+distill-tool = "distill_tool.cli:main"
+
+[project.urls]
+Repository = "https://github.com/worshipyour/yolo-distill-tool"
+Issues = "https://github.com/worshipyour/yolo-distill-tool/issues"
+Documentation = "https://github.com/worshipyour/yolo-distill-tool#readme"
+
+[tool.setuptools]
+license-files = ["LICENSE", "THIRD_PARTY.md", "tests/reference/LICENSE.Apache-2.0"]
+
+[tool.setuptools.packages.find]
+include = ["distill_tool*"]
+
+[tool.setuptools.package-data]
+distill_tool = ["ui_static/*.html", "ui_static/*.js", "ui_static/*.css"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

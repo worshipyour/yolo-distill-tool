@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="distill-token" content="__TOKEN__">
+  <title>YOLO Distill · 训练工作台</title><link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<aside class="sidebar">
+  <div class="brand"><span class="logo">D</span><div>Distill Studio<small>YOLOv5 训练与蒸馏</small></div></div>
+  <button class="nav active" id="newTask">＋ 配置新任务</button>
+  <div class="nav-label">最近任务</div><div id="history" class="history"><p class="muted">暂无任务</p></div>
+  <div class="sidebar-bottom"><span class="dot"></span> 本地训练服务<small>训练运行在启动服务的机器上</small></div>
+</aside>
+<main>
+  <header><div><div class="eyebrow">TRAINING WORKSPACE</div><h1>配置你的训练任务</h1><p>选择数据、模型与蒸馏方式，然后开始训练。</p></div><span class="version">v0.2 · YOLOv5</span></header>
+  <div class="environment" id="environment"><span class="spinner"></span><div>正在检测训练环境…<small>读取 Python、PyTorch 与可用 GPU</small></div><button class="text-button" id="refreshHardware">重新检测</button></div>
+  <div class="workspace">
+    <form id="trainingForm" novalidate>
+      <section class="card">
+        <div class="card-heading"><span class="number">01</span><div><h2>数据与输出</h2><p>使用标准 YOLO 格式数据集，类别从 YAML 自动读取。</p></div></div>
+        <label for="name">任务名称 <span class="optional">可选</span></label><input id="name" placeholder="例如：目标检测 · FGD 实验" maxlength="80">
+        <label for="data">数据集 YAML <span class="required">必选</span></label><div class="path-row"><input id="data" placeholder="选择 dataset.yaml"><button type="button" class="secondary" data-browse="data" data-kind="yaml">浏览</button></div>
+        <small class="hint">训练需要 train / val / names；如需独立测试，再提供 test。</small>
+        <label for="output">结果保存目录</label><div class="path-row"><input id="output" placeholder="自动使用当前目录下 runs"><button type="button" class="secondary" data-browse="output" data-kind="directory">浏览</button></div>
+        <small class="hint">每次运行自动创建独立文件夹，保存配置、日志和模型权重。</small>
+      </section>
+      <section class="card">
+        <div class="card-heading"><span class="number">02</span><div><h2>模型与蒸馏</h2><p>方法可以替换，训练、验证和保存流程保持统一。</p></div></div>
+        <label for="method">训练方式</label><select id="method"></select><div class="method-description" id="methodDescription"></div>
+        <div class="row two"><div><label for="teacher">教师模型 Teacher</label><select id="teacher"></select><input id="teacherAuto" value="从教师权重自动读取" disabled hidden></div><div><label for="student">学生模型 Student</label><select id="student"></select></div></div>
+        <div id="teacherSection">
+          <label for="teacherSource">教师来源</label><select id="teacherSource"><option value="train">先训练教师，再蒸馏学生</option><option value="checkpoint">使用已训练好的教师权重</option></select>
+          <label id="teacherWeightsLabel" for="teacher_weights">教师初始化权重 <span class="optional">留空使用官方预训练</span></label><div class="path-row"><input id="teacher_weights" placeholder="可选 .pt 文件"><button type="button" class="secondary" data-browse="teacher_weights" data-kind="pt">浏览</button></div>
+        </div>
+        <label for="student_weights">学生初始化权重 <span class="optional">留空使用官方预训练</span></label><div class="path-row"><input id="student_weights" placeholder="可选 .pt 文件"><button type="button" class="secondary" data-browse="student_weights" data-kind="pt">浏览</button></div>
+        <details id="methodDetails"><summary>蒸馏方法参数 <span>默认值可直接使用</span></summary><div class="row two parameters" id="parameters"></div><div id="pluginParameters" hidden><label for="pluginJson">插件附加参数（JSON）</label><textarea id="pluginJson" rows="3">{}</textarea></div></details>
+      </section>
+      <section class="card">
+        <div class="card-heading"><span class="number">03</span><div><h2>训练参数</h2><p>尺寸与训练资源按你的数据和设备设置。</p></div></div>
+        <div class="row three"><div><label for="height">输入高度</label><input id="height" type="number" min="32" max="4096" value="640"></div><div><label for="width">输入宽度</label><input id="width" type="number" min="32" max="4096" value="640"></div><div><label>通道数</label><input value="3 · RGB" disabled></div></div>
+        <div id="shapeHint" class="hint shape-hint"></div>
+        <div class="row three"><div><label for="epochs">训练轮数 Epochs</label><input id="epochs" type="number" min="1" max="10000" value="50"></div><div><label for="batch_size">批大小 Batch</label><input id="batch_size" type="number" min="1" max="4096" value="16"></div><div><label for="device">训练设备</label><select id="device"><option value="0">GPU 0</option><option value="cpu">CPU</option></select></div></div>
+        <details><summary>更多设置</summary><div class="row three"><div><label for="workers">数据加载进程</label><input id="workers" type="number" min="0" max="128" value="4"></div><div><label for="seed">随机种子</label><input id="seed" type="number" min="0" value="42"></div><div><label for="eval_batch">评测批大小</label><input id="eval_batch" type="number" min="1" value="16"></div></div><label for="engine">YOLOv5 引擎目录 <span class="optional">首次使用自动下载</span></label><div class="path-row"><input id="engine"><button type="button" class="secondary" data-browse="engine" data-kind="directory">浏览</button></div></details>
+      </section>
+      <section class="card options"><h2>同时运行</h2><label class="checkbox"><input id="baseline" type="checkbox" checked><span>学生基线训练<small>为蒸馏学生提供相同条件的对照</small></span></label><label class="checkbox"><input id="evaluate" type="checkbox"><span>独立测试<small>需要数据集提供独立 test 划分</small></span></label><label class="checkbox"><input id="benchmark" type="checkbox"><span>统一推理测速<small>使用当前 GPU，报告单张延迟和批量吞吐</small></span></label><label class="checkbox"><input id="export" type="checkbox"><span>导出部署模型<small>导出纯学生权重和 ONNX，并进行数值校验</small></span></label></section>
+      <div class="start-bar"><div><b id="startSummary">准备创建训练任务</b><small>首次运行会下载引擎和官方预训练权重</small></div><button type="submit" id="startButton" class="primary" disabled>等待环境检测</button></div>
+    </form>
+    <aside class="task-panel">
+      <section class="card job-card"><div class="panel-title"><h2>任务运行</h2><span class="status idle" id="jobStatus">未开始</span></div><div id="idleState"><div class="empty-icon">↗</div><h3>从你的第一项训练开始</h3><p>填好左侧信息，点击“开始训练”。<br>进度、日志和输出位置会出现在这里。</p></div><div id="jobState" hidden><h3 id="jobName"></h3><p class="muted" id="jobStage"></p><div class="progress-track"><div id="progressFill"></div></div><div class="progress-label"><span id="progressText">等待启动</span><span id="jobDevice"></span></div><p class="error-text" id="jobError" hidden></p><label>输出位置</label><div class="output-path" id="jobOutput"></div><div class="job-actions"><button id="stopButton" type="button" class="danger" hidden>停止任务</button><button id="resumeButton" type="button" class="secondary" hidden>从 checkpoint 恢复</button><button id="reportButton" type="button" class="secondary" hidden>查看报告</button></div></div></section>
+      <section class="card log-card"><div class="panel-title"><h2>实时日志</h2><button id="copyLog" class="text-button" type="button">复制</button></div><pre id="logs">任务启动后显示日志。</pre></section>
+      <p class="persistence-note">关闭浏览器后，已经提交的训练继续在此机器运行。停止任务会保留最近一个完整 checkpoint。</p>
+    </aside>
+  </div>
+</main>
+<dialog id="fileDialog"><div class="dialog-header"><h2 id="browseTitle">选择文件</h2><button class="text-button" id="closeBrowse">关闭</button></div><p class="hint">浏览训练服务所在机器的文件。</p><div class="path-row"><button class="secondary" id="browseUp">上一级</button><input id="browsePath"><button class="secondary" id="browseGo">打开</button></div><div id="fileEntries"></div><div class="dialog-footer"><button class="primary" id="chooseDirectory" hidden>选择此目录</button></div></dialog>
+<dialog id="reportDialog"><div class="dialog-header"><h2>任务报告</h2><button class="text-button" id="closeReport">关闭</button></div><pre id="reportContent"></pre></dialog>
+<div id="toast" role="status" hidden></div>
+<script src="/app.js"></script>
+</body></html>

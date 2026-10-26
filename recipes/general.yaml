@@ -1,0 +1,33 @@
+version: 1
+workspace: ../runs/my-experiment
+engine: ../vendor/yolov5
+data: ../data/my-dataset/dataset.yaml
+models:
+  teacher:
+    architecture: yolov5m
+    weights: ''
+  student:
+    architecture: yolov5n
+    weights: ''
+input:
+  height: 640
+  width: 640
+  channels: 3
+training:
+  epochs: 50
+  batch_size: 16
+  workers: 4
+  seed: 42
+  device: '0'
+methods:
+  response_kd:
+    weight: 0.05
+    temperature: 2.0
+workflow:
+  train_teacher: true
+  baseline: true
+  evaluate: false
+  benchmark: false
+  export: false
+evaluation:
+  batch_size: 16

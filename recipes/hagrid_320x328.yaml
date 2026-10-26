@@ -1,0 +1,36 @@
+version: 1
+workspace: ../runs/hagrid-320x328-seed42
+engine: ../vendor/yolov5
+data: ../data/hagrid10/dataset.yaml
+input:
+  height: 320
+  width: 328
+  channels: 3
+training:
+  epochs: 50
+  # RTX 6000 Ada 48GB: profiled common batch for teacher and all students.
+  # Profile again on a different GPU; smaller cards may require a lower value.
+  batch_size: 256
+  seed: 42
+  device: '0'
+  workers: 32
+methods:
+  response_kd:
+    weight: 0.05
+    temperature: 2.0
+    confidence: 0.25
+    background_weight: 0.05
+  fgd:
+    # Global YOLO adaptation weight. FGD's four internal coefficients below
+    # retain the author's defaults; the external scale balances YOLO loss units.
+    weight: 0.005
+    temperature: 0.5
+    alpha: 0.001
+    beta: 0.0005
+    gamma: 0.001
+    relation: 0.000005
+evaluation:
+  batch_size: 64
+  benchmark_rounds: 3
+  benchmark_repeats: 100
+  benchmark_warmup: 50

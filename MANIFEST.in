@@ -1,0 +1,9 @@
+include README.md LICENSE THIRD_PARTY.md
+recursive-include recipes *.yaml
+recursive-include docs *.md *.png
+recursive-include requirements *.txt
+recursive-include scripts *.py
+recursive-include scripts *.ps1 *.sh
+recursive-include distill_tool/ui_static *.html *.js *.css
+include start.bat start.sh
+recursive-include tests *.py LICENSE.Apache-2.0

@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.bat text eol=crlf
+*.png binary
+# Keep third-party reference files byte-for-byte, including original whitespace.
+tests/reference/* -text -whitespace
