@@ -4,7 +4,7 @@ The integration and adapted engine code are distributed under GPL-3.0.
 
 | Component | Source | Version / scope | License |
 |---|---|---|---|
-| YOLOv5 | https://github.com/ultralytics/yolov5 | v7.0, commit `915bbf294bb74c859f0b41f1c23bc395014ea6679`; training engine and dataset augmentation | GPL-3.0 at the pinned revision; see LICENSE |
+| YOLOv5 | https://github.com/ultralytics/yolov5 | v7.0, commit `915bbf294bb74c859f0b41f1c23bc395014ea679`; training engine and dataset augmentation | GPL-3.0 at the pinned revision; see LICENSE |
 | FGD | https://github.com/yzd-v/FGD/blob/master/mmdet/distillation/losses/fgd.py | Yang et al., CVPR 2022; attention, foreground/background and learned relation loss | Apache-2.0; reference and full license retained under tests/reference |
 | Classical KD concept | https://arxiv.org/abs/1503.02531 | Hinton et al.; temperature-scaled soft targets | Paper cited for the concept; no paper text or code copied |
 | HaGRID | https://github.com/hukenovs/hagrid | Optional HaGRID v2 images and landmark annotations conversion example | Dataset is downloaded separately; retain its original terms and attribution |

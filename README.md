@@ -161,6 +161,6 @@ python -m pytest -q
 
 ## 许可与来源
 
-项目采用 **GPL-3.0**。YOLOv5 固定在 v7.0 / `915bbf294bb74c859f0b41f1c23bc395014ea6679`；FGD 参考实现及 Apache-2.0 许可保留在 `tests/reference`。详见 [LICENSE](LICENSE) 和 [THIRD_PARTY.md](THIRD_PARTY.md)。
+项目采用 **GPL-3.0**。YOLOv5 固定在 v7.0 / `915bbf294bb74c859f0b41f1c23bc395014ea679`；FGD 参考实现及 Apache-2.0 许可保留在 `tests/reference`。详见 [LICENSE](LICENSE) 和 [THIRD_PARTY.md](THIRD_PARTY.md)。
 
 数据集和训练权重需自行准备，仓库不包含数据、模型大文件或服务器凭据。
