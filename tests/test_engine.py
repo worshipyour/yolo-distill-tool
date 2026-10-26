@@ -65,7 +65,7 @@ class DetectionProbe(nn.Module):
         return x.new_tensor([[[100., 100., 50., 50., .9, .9]]])
 
 
-def test_predict_scales_nonempty_inference_detections():
+def test_predict_scales_nonempty_inference_detections(yolov5_engine):
     import numpy as np
     image = np.zeros((640, 656, 3), dtype=np.uint8)
     detections = infer(PaddedStudent(DetectionProbe()), image, 320, 328, torch.device('cpu'))
@@ -85,11 +85,7 @@ def test_pinned_trainer_generation_compiles_and_rejects_changed_upstream(tmp_pat
         generate_trainer(tmp_path)
 
 
-def test_fixed_shape_label_scaling_preserves_pixel_box(monkeypatch):
-    engine = Path(__file__).resolve().parents[1] / "vendor/yolov5"
-    if not engine.exists():
-        pytest.skip("bootstrap engine first")
-    monkeypatch.syspath_prepend(str(engine))
+def test_fixed_shape_label_scaling_preserves_pixel_box(yolov5_engine):
     from distill_tool.engine.data import pad_canvas
     import numpy as np
     image = np.zeros((320, 328, 3), dtype=np.uint8)
